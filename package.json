@@ -1,0 +1,52 @@
+{
+  "name": "ReactExample",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "bootstrap": "^3.3.6",
+    "css-loader": "^0.23.1",
+    "es6-promise": "^3.2.1",
+    "file-loader": "^0.9.0",
+    "gulp": "^3.9.1",
+    "i": "^0.3.5",
+    "jquery": "^2.2.3",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "lodash": "^4.12.0",
+    "moment": "^2.13.0",
+    "npm": "^3.10.6",
+    "react": "^15.0.2",
+    "react-dom": "^15.0.2",
+    "react-hot-loader": "^1.3.0",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.6.1",
+    "redux": "^3.5.2",
+    "rxjs": "^5.0.0-beta.12",
+    "rxjs-es": "^5.0.0-beta.12",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martynchamberlin/quillify.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martynchamberlin/quillify/issues"
+  },
+  "homepage": "https://github.com/martynchamberlin/quillify#readme",
+  "devDependencies": {}
+}

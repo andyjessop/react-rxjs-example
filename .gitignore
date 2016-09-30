@@ -1,0 +1,7 @@
+.DS_Store
+out/
+dist/
+.idea
+node_modules
+deploy_key
+npm-debug.log
