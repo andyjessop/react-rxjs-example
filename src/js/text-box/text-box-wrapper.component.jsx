@@ -2,13 +2,10 @@
 import React, {Component, PropTypes} from 'react';
 import {each} from 'lodash';
 
-// Containers
-import BaseContainer from '../base/base.container';
 // Components
 import TextBox from './text-box.component.jsx';
 
-
-export default class TextBoxContainer extends BaseContainer {
+export default class TextBoxWrapper extends Component {
 
     render() {
         if (this.props.textBoxes.length) {

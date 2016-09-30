@@ -5,16 +5,13 @@ import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 // Services
 import TextBoxService from './text-box/text-box.service';
 
-// Containers
-import BaseContainer from './base/base.container';
-
 // Components
-import TextBoxContainer from './text-box/text-box.container';
+import TextBoxContainer from './text-box/text-box-wrapper.component';
 
-export default class App extends BaseContainer {
+export default class App extends Component {
 
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         // The state is defined here because it's the highest node where the textBox
         // data is required
@@ -43,6 +40,13 @@ export default class App extends BaseContainer {
                 textBoxes: textBoxes
             }));
         });
+    }
+
+    componentWillUnmount() {
+        // We need to dispose of RxJS subscriptions
+        for (let service of this.services) {
+            service.emitter.dispose();
+        }
     }
 
     render() {
