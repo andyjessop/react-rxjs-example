@@ -1,9 +1,6 @@
 // Lib
 import React, {Component} from 'react';
 import lodash from 'lodash';
-import Rx from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import {ajax} from 'rxjs/observable/dom/ajax';
 
 export default class TextBox extends Component {
 

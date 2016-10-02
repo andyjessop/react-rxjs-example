@@ -1,6 +1,13 @@
 // Lib
 import {Subject} from 'rxjs/Subject';
 import {findIndex} from 'lodash';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/forEach';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/flatMap';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/debounce';
 
 export default class TextBoxService {
 
