@@ -1,21 +1,33 @@
 // Lib
 import React, {Component} from 'react';
 import lodash from 'lodash';
+import Rx from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import {ajax} from 'rxjs/observable/dom/ajax';
 
 export default class TextBox extends Component {
 
-    constructor() {
-        super();
-        this.remove = this.remove.bind(this);
+    constructor(props) {
+        super(props);
+        this.state = {
+            output: this.props.output
+        };
+
+        // Event bindings
         this.update = this.update.bind(this);
     }
 
+    componentDidMount() {
+        // Services
+        this.textBox = this.props.services.textBox;
+    }
+
     update(event) {
-        this.props.services.textBox.updateText(event.target);
+        this.textBox.updateText$.next(event.target);
     }
 
     remove() {
-        this.props.services.textBox.removeTextBox(this.props.id);
+        this.textBox.removeTextBox$.next(this.props.id);
     }
 
     render() {
@@ -30,13 +42,12 @@ export default class TextBox extends Component {
                         placeholder={this.props.name}
                         onChange={this.update}
                     />
-                    <span className="help-block">{this.props.value}</span>
+                    <span className="help-block">{this.state.output}</span>
                 </div>
                 <div className="col-sm-1">
                     <button className="close" onClick={this.remove}><span>&times; </span></button>
                 </div>
             </div>
         );
-
     }
 }
