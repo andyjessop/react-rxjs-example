@@ -29,11 +29,11 @@ export default class TextBoxService {
         this.addTextBox$.subscribe(() => this.addTextBox());
         this.removeTextBox$.subscribe(id => this.removeTextBox(id));
         this.updateText$
-            .forEach(target => this.updateText(target))
-            .map(target => {
+            .forEach(target => {
                 this.target = target;
-                return target.value;
+                this.updateText(target)
             })
+            .map(target =>  target.value)
             .filter(value => this.validateInput(value))
             .distinctUntilChanged()
             .debounce(500)
@@ -47,7 +47,7 @@ export default class TextBoxService {
                 }
             }).retry(3))
             .map(response => JSON.stringify(response[0]).substr(0, 50))
-            .foreach(string => this.updateOutput(this.target, string))
+            .forEach(string => this.updateOutput(this.target, string))
             .catch(err => console.log(err));
     }
 

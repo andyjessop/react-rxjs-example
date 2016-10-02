@@ -7,11 +7,8 @@ import {ajax} from 'rxjs/observable/dom/ajax';
 
 export default class TextBox extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            output: this.props.output
-        };
+    constructor() {
+        super();
 
         // Event bindings
         this.update = this.update.bind(this);
@@ -42,7 +39,7 @@ export default class TextBox extends Component {
                         placeholder={this.props.name}
                         onChange={this.update}
                     />
-                    <span className="help-block">{this.state.output}</span>
+                    <span className="help-block">{this.props.output}</span>
                 </div>
                 <div className="col-sm-1">
                     <button className="close" onClick={this.remove}><span>&times; </span></button>
