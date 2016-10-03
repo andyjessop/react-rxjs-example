@@ -29,7 +29,7 @@ export default class App extends Component {
     }
 
     addTextBox() {
-        this.services.textBox.addTextBox();
+        this.services.textBox.addTextBox$.next();
     }
 
     componentWillMount() {
