@@ -1,13 +1,15 @@
 // Lib
 import {Subject} from 'rxjs/Subject';
-import {findIndex} from 'lodash';
+import {findIndex, cloneDeep} from 'lodash';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/forEach';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/flatMap';
+import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/retry';
+import {ajax} from 'rxjs/observable/dom/ajax';
 
 export default class TextBoxService {
 
@@ -36,26 +38,23 @@ export default class TextBoxService {
         this.addTextBox$.subscribe(() => this.addTextBox());
         this.removeTextBox$.subscribe(id => this.removeTextBox(id));
         this.updateText$
-            .forEach(target => {
+            .do(target => {
                 this.target = target;
-                this.updateText(target)
+                this.updateText(target);
             })
             .map(target =>  target.value)
             .filter(value => this.validateInput(value))
             .distinctUntilChanged()
-            .debounce(500)
-            .flatMap(value => this.http.get({
+            .debounceTime(500)
+            .flatMap(value => ajax({
                 url: 'https://en.wikipedia.org/w/api.php',
-                dataType: 'json',
-                data: {
-                    action: 'query',
-                    format: 'json',
-                    search: value
-                }
-            }).retry(3))
+                responseType: 'json'
+                })
+                .retry(3)
+                .catch(err => console.log(err)))
             .map(response => JSON.stringify(response[0]).substr(0, 50))
-            .forEach(string => this.updateOutput(this.target, string))
-            .catch(err => console.log(err));
+            .do(string => this.updateOutput(this.target, string))
+            .subscribe();
     }
 
     addTextBox() {
@@ -66,43 +65,30 @@ export default class TextBoxService {
             output: ''
         });
 
-        // Emit to listeners
         this.emitter$.next(this.textBoxes);
 
         this.nextId++;
     };
 
     removeTextBox(id) {
-        // Get textBox index
         const index = findIndex(this.textBoxes, function(textBox) { return textBox.id == id });
-
-        // Remove
-        this.textBoxes.splice(index, 1);
-
-        // Emit to listeners
+        this.textBoxes = cloneDeep(this.textBoxes).splice(index, 1);
         this.emitter$.next(this.textBoxes);
     };
 
     updateText(target) {
-
-        // Get textBox index
         const index = findIndex(this.textBoxes, function(textBox) { return textBox.id === parseInt(target.id, 10) });
-
+        this.textBoxes = cloneDeep(this.textBoxes);
         this.textBoxes[index].value = this.target.value;
-
-        // Emit to listeners
         this.emitter$.next(this.textBoxes);
 
         return true;
     };
 
-    updateOutput(string) {
-        // Get textBox index
-        const index = findIndex(this.textBoxes, function(textBox) { return textBox.id === parseInt(this.target.id, 10) });
-
+    updateOutput(target, string) {
+        const index = findIndex(this.textBoxes, function(textBox) { return textBox.id === parseInt(target.id, 10) });
+        this.textBoxes = cloneDeep(this.textBoxes);
         this.textBoxes[index].output = string;
-
-        // Emit to listeners
         this.emitter$.next(this.textBoxes);
 
         return true;
