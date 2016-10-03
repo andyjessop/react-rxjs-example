@@ -18,6 +18,7 @@ export default class TextBoxWrapper extends Component {
                         id={box.id}
                         value={box.value}
                         output={box.output}
+                        loading={box.loading}
                         services={this.props.services}
                     />
             ));

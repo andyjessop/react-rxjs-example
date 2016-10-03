@@ -35,11 +35,11 @@ export default class App extends Component {
     componentWillMount() {
         // Subscribe to the service - this automatically updates the state
         // when anything changes
-        this.services.textBox.emitter$.subscribe(textBoxes => {
+        this.services.textBox.emitter$.subscribe(textBoxes =>
             this.setState(prevState => ({
                 textBoxes: textBoxes
-            }));
-        });
+            }))
+        );
     }
 
     componentWillUnmount() {

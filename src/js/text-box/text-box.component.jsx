@@ -9,6 +9,7 @@ export default class TextBox extends Component {
 
         // Event bindings
         this.update = this.update.bind(this);
+        this.remove = this.remove.bind(this);
     }
 
     componentDidMount() {
@@ -36,7 +37,11 @@ export default class TextBox extends Component {
                         placeholder={this.props.name}
                         onChange={this.update}
                     />
-                    <span className="help-block">{this.props.output}</span>
+                    {
+                        this.props.loading ?
+                        <span>Loading</span> :
+                        <span className="help-block">{this.props.output}</span>
+                    }
                 </div>
                 <div className="col-sm-1">
                     <button className="close" onClick={this.remove}><span>&times; </span></button>

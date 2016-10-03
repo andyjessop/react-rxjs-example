@@ -37,23 +37,28 @@ export default class TextBoxService {
         // Action subscriptions
         this.addTextBox$.subscribe(() => this.addTextBox());
         this.removeTextBox$.subscribe(id => this.removeTextBox(id));
+
         this.updateText$
             .do(target => {
                 this.target = target;
-                this.updateText(target);
+                this.updateProperty(target, 'value', target.value);
             })
             .map(target =>  target.value)
-            .filter(value => this.validateInput(value))
+            .filter(value => value.length > 2)
             .distinctUntilChanged()
             .debounceTime(500)
+            .do(value => this.updateProperty(this.target, 'loading', true))
             .flatMap(value => ajax({
-                url: 'https://en.wikipedia.org/w/api.php',
+                url: 'http://jsonplaceholder.typicode.com/posts',
                 responseType: 'json'
                 })
                 .retry(3)
                 .catch(err => console.log(err)))
-            .map(response => JSON.stringify(response[0]).substr(0, 50))
-            .do(string => this.updateOutput(this.target, string))
+            .map(response => response.response[0].body.substr(0,50))
+            .do(string => {
+                this.updateProperty(this.target, 'output', string);
+                this.updateProperty(this.target, 'loading', false)
+            })
             .subscribe();
     }
 
@@ -62,39 +67,23 @@ export default class TextBoxService {
             id: this.nextId,
             name: `TextBox ${this.nextId}`,
             value: '',
-            output: ''
+            output: '',
+            loading: false
         });
-
         this.emitter$.next(this.textBoxes);
-
         this.nextId++;
     };
 
     removeTextBox(id) {
-        const index = findIndex(this.textBoxes, function(textBox) { return textBox.id == id });
-        this.textBoxes = cloneDeep(this.textBoxes).splice(index, 1);
+        const index = findIndex(this.textBoxes, function(textBox) { return textBox.id === id });
+        this.textBoxes = this.textBoxes.splice(index, 1);
         this.emitter$.next(this.textBoxes);
     };
 
-    updateText(target) {
-        const index = findIndex(this.textBoxes, function(textBox) { return textBox.id === parseInt(target.id, 10) });
+    updateProperty(target, property, value) {
         this.textBoxes = cloneDeep(this.textBoxes);
-        this.textBoxes[index].value = this.target.value;
-        this.emitter$.next(this.textBoxes);
-
-        return true;
-    };
-
-    updateOutput(target, string) {
         const index = findIndex(this.textBoxes, function(textBox) { return textBox.id === parseInt(target.id, 10) });
-        this.textBoxes = cloneDeep(this.textBoxes);
-        this.textBoxes[index].output = string;
+        this.textBoxes[index][property] = value;
         this.emitter$.next(this.textBoxes);
-
-        return true;
-    }
-
-    validateInput(value) {
-        return value.length > 2;
     }
 }
